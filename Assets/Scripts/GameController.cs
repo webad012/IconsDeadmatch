@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Data;
+using System.Data.SQLite;
 
 [System.Serializable]
 public class PickUps
@@ -42,7 +45,9 @@ public class GameController : MonoBehaviour
 	private bool gameOver = false;
 	private bool gameWon = false;
 
-	// Use this for initialization
+	SQLiteConnection con = new SQLiteConnection("Data Source=gamedata.db;Version=3;New=False;Compress=True");
+	SQLiteCommand cmd;
+
 	void Start () 
 	{
 		camera1.enabled = true;
@@ -51,6 +56,30 @@ public class GameController : MonoBehaviour
 		displayTexts.statusTextFront.text = "";
 		displayTexts.statusTextBack.text = "";
 		InitializeGameField ();
+
+		StartCoroutine (SetupDatabase());
+	}
+
+	IEnumerator SetupDatabase()
+	{
+		con.Open ();
+		cmd = con.CreateCommand ();
+		cmd.CommandText = "CREATE TABLE IF NOT EXISTS player_profiles(id, name);";
+		cmd.ExecuteNonQuery ();
+
+		//cmd.CommandText = "SELECT COUNT(*) FROM player_profiles;";
+		//int result = Convert.ToInt32 (cmd.ExecuteScalar());
+
+		cmd.CommandText = "SELECT id, name FROM player_profiles;";
+		SQLiteDataReader sqlReader = cmd.ExecuteReader ();
+		while (sqlReader.Read()) 
+		{
+			Debug.Log(sqlReader.GetInt32(0).ToString() + " | " + sqlReader.GetString(1).ToString());
+		}
+		sqlReader.Close ();
+
+		con.Close ();
+		yield return new WaitForSeconds (0);
 	}
 
 	void Update()
@@ -71,22 +100,23 @@ public class GameController : MonoBehaviour
 			if (restSeconds == 0) 
 			{
 				gameOver = true;
-				displayTexts.statusTextFront.text = "Kraj igre!";
+				displayTexts.statusTextFront.text = StaticTexts.Instance.GameController_EndGame();
 				displayTexts.statusTextBack.text = displayTexts.statusTextFront.text;
 			}
 
 			if (pickUpList.Count == 0) 
 			{
 				gameWon = true;
-				displayTexts.statusTextFront.text = "Pobeda!";
+				displayTexts.statusTextFront.text = StaticTexts.Instance.GameController_Win();
 				displayTexts.statusTextBack.text = displayTexts.statusTextFront.text;
 			}
 		}
 
-		displayTexts.countTextFront.text = "Preostalo: " + pickUpList.Count.ToString ();
+		displayTexts.countTextFront.text = StaticTexts.Instance.GameController_PickUpsLeft() 
+											+ pickUpList.Count.ToString ();
 		displayTexts.countTextBack.text = displayTexts.countTextFront.text;
 		
-		displayTexts.timerTextFront.text = "Vreme: " + restSeconds.ToString ();
+		displayTexts.timerTextFront.text = StaticTexts.Instance.GameController_Time() + restSeconds.ToString ();
 		displayTexts.timerTextBack.text = displayTexts.timerTextFront.text;
 	}
 	
@@ -124,14 +154,14 @@ public class GameController : MonoBehaviour
 		do 
 		{
 			float xValue, zValue;
-			xValue = Random.Range(minDistance, maxDistance);
-			zValue = Random.Range(minDistance, maxDistance);
+			xValue = UnityEngine.Random.Range(minDistance, maxDistance);
+			zValue = UnityEngine.Random.Range(minDistance, maxDistance);
 
-			if(Random.value < 0.5f)
+			if(UnityEngine.Random.value < 0.5f)
 			{
 				xValue *= -1;
 			}
-			if(Random.value < 0.5f)
+			if(UnityEngine.Random.value < 0.5f)
 			{
 				zValue *= -1;
 			}
