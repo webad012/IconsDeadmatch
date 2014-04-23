@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Data;
 using System.Data.SQLite;
 
 [System.Serializable]
@@ -45,9 +43,6 @@ public class GameController : MonoBehaviour
 	private bool gameOver = false;
 	private bool gameWon = false;
 
-	SQLiteConnection con = new SQLiteConnection("Data Source=gamedata.db;Version=3;New=False;Compress=True");
-	SQLiteCommand cmd;
-
 	void Start () 
 	{
 		camera1.enabled = true;
@@ -62,23 +57,15 @@ public class GameController : MonoBehaviour
 
 	IEnumerator SetupDatabase()
 	{
-		con.Open ();
-		cmd = con.CreateCommand ();
-		cmd.CommandText = "CREATE TABLE IF NOT EXISTS player_profiles(id, name);";
-		cmd.ExecuteNonQuery ();
-
 		//cmd.CommandText = "SELECT COUNT(*) FROM player_profiles;";
 		//int result = Convert.ToInt32 (cmd.ExecuteScalar());
 
-		cmd.CommandText = "SELECT id, name FROM player_profiles;";
-		SQLiteDataReader sqlReader = cmd.ExecuteReader ();
+		SQLiteDataReader sqlReader = DBController.Instance.ExecuteSqlForReader ("SELECT id, name FROM player_profiles;");
 		while (sqlReader.Read()) 
 		{
 			Debug.Log(sqlReader.GetInt32(0).ToString() + " | " + sqlReader.GetString(1).ToString());
 		}
 		sqlReader.Close ();
-
-		con.Close ();
 		yield return new WaitForSeconds (0);
 	}
 

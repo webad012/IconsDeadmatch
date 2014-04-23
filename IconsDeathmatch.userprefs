@@ -1,9 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\StaticTexts.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerProfilesController.cs">
     <Files>
-      <File FileName="Assets\Scripts\MainMenuController.cs" Line="85" Column="4" />
-      <File FileName="Assets\Scripts\StaticTexts.cs" Line="5" Column="2" />
+      <File FileName="Assets\Scripts\PlayerProfilesController.cs" Line="6" Column="2" />
+      <File FileName="Assets\Scripts\MainMenuController.cs" Line="70" Column="12" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="59" Column="3" />
+      <File FileName="Assets\Scripts\DBController.cs" Line="7" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
