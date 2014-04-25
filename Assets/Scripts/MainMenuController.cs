@@ -93,7 +93,7 @@ public class MainMenuController : MonoBehaviour
 			                    menuOptionY,
 			                    menuOptionWidth,
 			                    menuOptionHeight), 
-			           StaticTexts.Instance.MainMenu_Option(i));
+			           StaticTexts.Instance.MainMenu_Options(i));
         }
 	}
 

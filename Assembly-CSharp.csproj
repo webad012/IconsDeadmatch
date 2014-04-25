@@ -49,12 +49,14 @@
      <Compile Include="Assets\Scripts\AutoTransparent.cs" />
      <Compile Include="Assets\Scripts\BarrierController.cs" />
      <Compile Include="Assets\Scripts\ClearSight.cs" />
+     <Compile Include="Assets\Scripts\CustomizationController.cs" />
      <Compile Include="Assets\Scripts\DBController.cs" />
      <Compile Include="Assets\Scripts\DestroyByBoundary.cs" />
      <Compile Include="Assets\Scripts\DestroyByContact.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\MainMenuController.cs" />
      <Compile Include="Assets\Scripts\Mover.cs" />
+     <Compile Include="Assets\Scripts\PlayMenuController.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\PlayerProfilesController.cs" />
      <Compile Include="Assets\Scripts\RandomRotation.cs" />
@@ -62,6 +64,9 @@
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
  <Reference Include="System.Data.SQLite">
  <HintPath>Assets\System.Data.SQLite.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>Assets\System.Data.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
