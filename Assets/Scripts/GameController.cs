@@ -32,10 +32,6 @@ public class GameController : MonoBehaviour
 	public int pickUpsCount;
 	public int minDistance;
 	public int maxDistance;
-	public Vehicles vehicles;
-	public GameObject playerObject;
-
-	private GameObject playerVehicle;
 
 	private List<GameObject> barrierList = new List<GameObject>();
 	private List<GameObject> pickUpList = new List<GameObject>();
@@ -55,7 +51,6 @@ public class GameController : MonoBehaviour
 		displayTexts.statusTextFront.text = "";
 		displayTexts.statusTextBack.text = "";
 		InitializeGameField ();
-		playerVehicle = (GameObject)Instantiate (vehicles.vehicle1);
 
 		//StartCoroutine (SetupDatabase());
 	}
@@ -81,7 +76,6 @@ public class GameController : MonoBehaviour
 			camera1.enabled = !camera1.enabled;
 			camera2.enabled = !camera2.enabled;
 		}
-		playerVehicle.transform.parent = playerObject.transform;
 	}
 
 	void OnGUI()

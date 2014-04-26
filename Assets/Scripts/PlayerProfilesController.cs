@@ -3,35 +3,27 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System;
 
 class PlayerProfile
 {
+	private int _id;
 	private string _name;
-	private int _level;
-	//private int _health;
-	//private int _move_speed;
-	//private int _turn_speed;
-	//private int _damage;
 
 	public string GetName()
 	{
 		return _name;
 	}
 
-	public string GetDisplayName()
+	public int GetId()
 	{
-		return _name + " - lvl" + _level.ToString();
+		return _id;
 	}
 
-	//public PlayerProfile(string name, int level, int health, int move_speed, int turn_speed, int damage)
-	public PlayerProfile(string name, int level)
+	public PlayerProfile(int id, string name)
 	{
+		_id = id;
 		_name = name;
-		_level = level;
-		//_health = health;
-		//_move_speed = move_speed;
-		//_turn_speed = turn_speed;
-		//_damage = damage;
 	}
 }
 
@@ -45,9 +37,7 @@ public class PlayerProfilesController : MonoBehaviour
 	private Rect scrollRectPosition;
 	private Rect scrollRectView;
 	private Vector2 scrollPosition = Vector2.zero;
-	//private Vector2 scrollPosition;
 	private float scrollWidth = 300;
-	//private float scrollHeigth;
 	private float createNewTextFieldHeight = 20;
 	private float createNewHeight = 40;
 	private List<PlayerProfile> playerProfiles;
@@ -64,9 +54,6 @@ public class PlayerProfilesController : MonoBehaviour
 		contentArea = new Rect (10, headerHeight, Screen.width-10, Screen.height - headerHeight);
 		float scrollHeigth = contentArea.height - createNewHeight - 50;
 		scrollRectPosition = new Rect (Screen.width/2 - scrollWidth/2, contentArea.y + createNewHeight, scrollWidth, scrollHeigth);
-		//scrollPosition = new Vector2 (Screen.width/2 - scrollWidth/2, contentArea.y + createNewHeight);
-		//scrollRectView = new Rect (0, 0, 100, 100);
-		//scrollRectView = scrollRectPosition;
 
 		newNameInput = StaticTexts.Instance.PlayerProfiles_NewNameDefault ();
 		playerProfiles = new List<PlayerProfile> ();
@@ -75,25 +62,22 @@ public class PlayerProfilesController : MonoBehaviour
 
 	IEnumerator SetupPlayersList()
     {
-		string command = "SELECT name, level, health, move_speed, turn_speed, damage FROM PlayerProfiles;";
-		SQLiteDataReader sqlReader = DBController.Instance.ExecuteSqlForReader (command);
-		while (sqlReader.Read()) 
+		string sqlCommand;
+
+		sqlCommand = "SELECT COUNT(*) FROM PlayerProfiles";
+		int profilesCount = DBController.Instance.ExecuteSqlForIntScalar (sqlCommand);
+
+		for (int i=0; i<profilesCount; i++) 
 		{
-			playerProfiles.Add(new PlayerProfile(sqlReader.GetString(0),
-			                                     sqlReader.GetInt32(1)));//,
-			                                     //sqlReader.GetInt32(2),
-			                                     //sqlReader.GetInt32(3),
-			                                     //sqlReader.GetInt32(4),
-			                                     //sqlReader.GetInt32(5)));
+			sqlCommand = "SELECT id, name FROM PlayerProfiles LIMIT 1 OFFSET " + i.ToString() + ";";
+			object[] sqlReader = new object[2];
+			DBController.Instance.ExecuteSqlForReader (sqlCommand, sqlReader);
+
+			playerProfiles.Add(new PlayerProfile(Convert.ToInt32(sqlReader[0].ToString()),
+			                                     sqlReader[1].ToString()));
 		}
 
 		yield return new WaitForSeconds (0);
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
 	}
 
 	void CreateNewProfile()
@@ -113,30 +97,34 @@ public class PlayerProfilesController : MonoBehaviour
 
 		if (found == false) 
 		{
-			string command = "INSERT INTO PlayerProfiles (name, level, health, move_speed, turn_speed, damage) VALUES ('"+newNameInput+"', 1, 100, 1, 10, 1);";
+			string command = "INSERT INTO PlayerProfiles (name, money, selected_vehicle_id, selected_weapon_id)"
+								+" VALUES ('"+newNameInput+"', 2000, 1, 1);";
 			DBController.Instance.ExecuteSqlForNonQuery(command);
 			playerProfiles.Clear();
 			StartCoroutine (SetupPlayersList());
 		}
 	}
 
-	void DeleteProfile(string profileName)
+	void DeleteProfile(int profileId, string profileName)
 	{
 		if (EditorUtility.DisplayDialog (StaticTexts.Instance.PlayerProfiles_DeleteDialogTitle(),
 		                                 StaticTexts.Instance.PlayerProfiles_DeleteDialogMessage() + profileName,
 		                                 StaticTexts.Instance.Yes(),
 		                                 StaticTexts.Instance.No())) 
 		{
-			string command = "DELETE FROM PlayerProfiles WHERE name='" + profileName + "';";
-			DBController.Instance.ExecuteSqlForNonQuery (command);
+			string sqlCommand;
+
+			sqlCommand= "DELETE FROM PlayerProfiles WHERE id=" + profileId.ToString() + ";";
+			DBController.Instance.ExecuteSqlForNonQuery (sqlCommand);
+
 			playerProfiles.Clear ();
 			StartCoroutine (SetupPlayersList ());
 		}
 	}
 
-	void SelectProfile(string profileName)
+	void SelectProfile(int profile_list_index)
 	{
-		PlayerPrefs.SetString ("ChosenProfileName", profileName);
+		PlayerPrefs.SetInt ("ChoosenProfileId", playerProfiles[profile_list_index].GetId());
 		Application.LoadLevel ("MainMenu");
 	}
 
@@ -158,13 +146,13 @@ public class PlayerProfilesController : MonoBehaviour
 		scrollPosition = GUI.BeginScrollView (scrollRectPosition, scrollPosition, scrollRectView, true, false);
 		for (int i=0; i<playerProfiles.Count; i++) 
 		{
-			if(GUI.Button(new Rect(scrollRectPosition.x, scrollRectPosition.y + (40 * i), 200, 20), playerProfiles[i].GetDisplayName()))
+			if(GUI.Button(new Rect(scrollRectPosition.x, scrollRectPosition.y + (40 * i), 200, 20), playerProfiles[i].GetName()))
 			{
-				SelectProfile(playerProfiles[i].GetName());
+				SelectProfile(i);
 			}
 			if(GUI.Button(new Rect(scrollRectPosition.x + 200, scrollRectPosition.y + (40 * i), 25, 20), "X"))
 			{
-				DeleteProfile(playerProfiles[i].GetName());
+				DeleteProfile(playerProfiles[i].GetId(), playerProfiles[i].GetName());
 			}
 			//GUI.Button(new Rect(scrollRectPosition.x + 230, scrollRectPosition.y + (40 * i), 100, 20), StaticTexts.Instance.PlayerProfiles_Rename());
 		}

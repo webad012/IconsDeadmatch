@@ -7,7 +7,8 @@ public class PlayerController : MonoBehaviour
 	public float turnSpeed;
 
 	public GameObject bullet;
-	public Transform bulletSpawn;
+	public Vehicles vehicles;
+	public Weapons weapons;
 
 	public LayerMask layerMask;
 	public float skinWidth = 0.1f;
@@ -17,10 +18,37 @@ public class PlayerController : MonoBehaviour
 	private float partialExtent;
 	private float sqrtMinimumExtent;
 
+	private GameObject playerVehicleObject;
+	private GameObject playerWeaponObject;
+	private Transform bulletSpawnPosition;
 
 	// Use this for initialization
 	void Start () 
 	{
+		playerVehicleObject = (GameObject)Instantiate (vehicles.vehicle1);
+		playerVehicleObject.transform.parent = transform;
+
+		GameObject weaponPositionObject = GameObject.FindWithTag ("WeaponPosition");
+		if (weaponPositionObject == null)
+		{
+			Debug.Log("Cannot find 'WeaponPosition' object.");
+			
+		}
+		playerWeaponObject = (GameObject)Instantiate (weapons.weapon1);
+		playerWeaponObject.transform.position = weaponPositionObject.transform.position;
+		playerWeaponObject.transform.parent = weaponPositionObject.transform;
+
+		GameObject bulletSpawnPositionObject = GameObject.FindWithTag ("BulletSpawn");
+		if (bulletSpawnPositionObject != null) 
+		{
+			bulletSpawnPosition = bulletSpawnPositionObject.transform;
+			
+		} else 
+		{
+			Debug.Log("Cannot find 'BulletSpawn' object.");
+			
+		}
+
 		rigidbody.freezeRotation = true;
 		rigidbody.drag = 4.0f;
 
@@ -33,20 +61,23 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetButton ("Fire1")) {
-						Instantiate (bullet, bulletSpawn.position, bulletSpawn.rotation);
-				}
+		if (Input.GetButton ("Fire1")) 
+		{
+			Instantiate (bullet, bulletSpawnPosition.position, bulletSpawnPosition.rotation);
+		}
 
 		float steer = Input.GetAxis ("Horizontal");
 		float gas = Input.GetAxis ("Vertical");
 		
-		if (gas != 0) {
+		if (gas != 0) 
+		{
 			float moveDist = gas * speed * Time.deltaTime;
 			
 			transform.Translate(Vector3.forward * moveDist);
 		}
 		
-		if (steer != 0) {
+		if (steer != 0) 
+		{
 			float turnAngle = steer * turnSpeed * Time.deltaTime * gas;
             transform.Rotate(0, turnAngle ,0);
         }

@@ -8,11 +8,15 @@ public class DestroyByContact : MonoBehaviour
 	void Start()
 	{
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
-		if (gameControllerObject != null) {
+		if (gameControllerObject != null) 
+		{
 			gameController = gameControllerObject.GetComponent<GameController>();
-				} else {
+				
+		} else 
+		{
 			Debug.Log("Cannot find 'GameController' script.");
-				}
+				
+		}
 	}
 
 	void OnTriggerEnter(Collider other)

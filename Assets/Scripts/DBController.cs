@@ -4,51 +4,74 @@ using System;
 using System.Data;
 using System.Data.SQLite;
 
-//using System.Text;
-//using System.Collections.Generic;
-//using iBoxDB.LocalServer;
-
 public class DBController
 {
-	private SQLiteConnection con;
-	//DB server = new DB(1, "");
-	
-	public SQLiteDataReader ExecuteSqlForReader(string command)
+	private string connectionString = "Data Source=gamedata.db;Version=3;New=False;Compress=True";
+
+	public void ExecuteSqlForReader(string command, object[] result)
 	{
-		SQLiteCommand cmd;
-		cmd = con.CreateCommand ();
-		cmd.CommandText = command;
-		return cmd.ExecuteReader ();
+		using (SQLiteConnection c = new SQLiteConnection(connectionString)) 
+		{
+			c.Open();
+			using(SQLiteCommand cmd = new SQLiteCommand(command, c))
+			{
+				using(SQLiteDataReader rdr = cmd.ExecuteReader())
+				{
+					rdr.Read();
+					rdr.GetValues(result);
+				}
+				cmd.Dispose();
+			}
+			c.Close();
+		}
 	}
 
 	public string ExecuteSqlForStringScalar(string command)
 	{
-		SQLiteCommand cmd;
-		cmd = con.CreateCommand ();
-		cmd.CommandText = command;
-		string result = Convert.ToString(cmd.ExecuteScalar ());
-		return result;
+		using (SQLiteConnection c = new SQLiteConnection(connectionString)) 
+		{
+			c.Open();
+			using(SQLiteCommand cmd = new SQLiteCommand(command, c))
+			{
+				string result = Convert.ToString (cmd.ExecuteScalar ());
+				cmd.Dispose();
+				c.Close();
+				return result;
+			}
+		}
+	}
+
+	public int ExecuteSqlForIntScalar(string command)
+	{
+		using (SQLiteConnection c = new SQLiteConnection(connectionString)) 
+		{
+			c.Open();
+			using(SQLiteCommand cmd = new SQLiteCommand(command, c))
+			{
+				int result = Convert.ToInt32(cmd.ExecuteScalar ());
+				cmd.Dispose();
+				c.Close();
+				return result;
+			}
+		}
 	}
 
 	public void ExecuteSqlForNonQuery(string command)
 	{
-		SQLiteCommand cmd;
-		cmd = con.CreateCommand ();
-		cmd.CommandText = command;
-		cmd.ExecuteNonQuery ();
+		using (SQLiteConnection c = new SQLiteConnection(connectionString)) 
+		{
+			c.Open();
+			using(SQLiteCommand cmd = new SQLiteCommand(command, c))
+			{
+				cmd.ExecuteNonQuery();
+				cmd.Dispose();
+			}
+			c.Close();
+		}
 	}
 
 	protected DBController()
 	{
-		//server.EnsureTable<Record> ("PlayerProfiles", "id");
-		//float qwe = server.Open ();
-		con = new SQLiteConnection("Data Source=gamedata.db;Version=3;New=False;Compress=True");
-		con.Open ();
-
-		SQLiteCommand cmd;
-		cmd = con.CreateCommand ();
-		cmd.CommandText = "CREATE TABLE IF NOT EXISTS PlayerProfiles (id INTEGER PRIMARY KEY, name TEXT, level NUMERIC damage NUMERIC, health NUMERIC, move_speed NUMERIC, turn_speed NUMERIC)";
-		cmd.ExecuteNonQuery ();
 	}
 	private static DBController _instance = null;
 	public static DBController Instance

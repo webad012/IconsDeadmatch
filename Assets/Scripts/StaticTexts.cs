@@ -16,7 +16,8 @@ public class StaticTexts
 															_MainMenu_Option3,
 															_MainMenu_Option4};
 	private string[] _MainMenu_Header = {"Glavni meni", "Main menu"};
-	private string[] _MainMenu_NotYourProfile = {"Nije vas profil?", "Not your profile?"};
+	private string[] _MainMenu_NotYourProfile = {"(N)ije vas profil?", "(N)ot your profile?"};
+	private string[] _MainMenu_ProfileNotSelected = {"Molimo izaberite/kreirajte profil", "Please select/create profile"};
 	private string[] _PlayerProfiles_Header = {"Profili", "Profiles"};
 	private string[] _PlayerProfiles_NewNameDefault = {"Novo ime", "New Name"};
 	private string[] _PlayerProfiles_CreateNewButton = {"Kreiraj novo", "Create new"};
@@ -27,15 +28,82 @@ public class StaticTexts
 	private string[] _Yes = {"Da", "Yes"};
 	private string[] _No = {"Ne", "No"};
 	private string[] _PlayMenu_Header = {"Meni igranja", "Play menu"};
+	private string[] _PlayMenu_Name = {"Ime: ", "Name: "};
+	private string[] _PlayMenu_VehicleWeaponNotChosen = {"Vozilo i/ili oruzje nije izabrano (Kustomizacija)", "Vehicle and/or weapon not chosen (Customization)"};
+	private string[] _Money = {"Novac: ", "Money: "};
 	private static string[] _PlayMenu_Option1 = {"Jedan igrac", "Single player"};
 	private static string[] _PlayMenu_Option2 = {"Vise igraca", "Multiplayer"};
 	private static string[] _PlayMenu_Option3 = {"Kustomizacija", "Customization"};
+	private static string[] _PlayMenu_Option4 = {"Nazad", "Back"};
 	private string[][] _PlayMenu_Options = new string[][]{_PlayMenu_Option1,
 															_PlayMenu_Option2,
-															_PlayMenu_Option3};
+															_PlayMenu_Option3,
+															_PlayMenu_Option4};
 	private static string[] _Customization_Price = {"Cena: ", "Price: "};
 	private static string[] _Customization_HeaderVehicles = {"Kustomizacija vozila", "Vehicle customization"};
 	private static string[] _Customization_HeaderWeapons = {"Kustomizacija oruzja", "Weapon customization"};
+	private static string[] _Customization_Select = {"Izaberi", "Select"};
+	private static string[] _Customization_Unlock = {"Otkljucaj", "Unlock"};
+	private static string[] _Customization_Back = {"Nazad", "Back"};
+	private static string[] _Customization_NotEnoughMoney = {"Nedovoljno novca", "Not enough money"};
+	private static string[] _Customization_AdditionalInfoDamage = {"Snaga: ", "Power: "};
+	private static string[] _Customization_AdditionalInfoMoveSpeed = {"Brzina kretanja: ", "Move speed: "};
+	private static string[] _Customization_AdditionalInfoTurnSpeed = {"Brzina skretanja: ", "Turn speed: "};
+
+	public string Customization_AdditionalInfoMoveSpeed()
+	{
+		return _Customization_AdditionalInfoMoveSpeed[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_AdditionalInfoTurnSpeed()
+	{
+		return _Customization_AdditionalInfoTurnSpeed[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_AdditionalInfoDamage()
+	{
+		return _Customization_AdditionalInfoDamage[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string PlayMenu_VehicleWeaponNotChosen()
+	{
+		return _PlayMenu_VehicleWeaponNotChosen[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_NotEnoughMoney()
+	{
+		return _Customization_NotEnoughMoney[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_Select()
+	{
+		return _Customization_Select[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_Unlock()
+	{
+		return _Customization_Unlock[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Customization_Back()
+	{
+		return _Customization_Back[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string Money()
+	{
+		return _Money[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string PlayMenu_Name()
+	{
+		return _PlayMenu_Name[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
+
+	public string MainMenu_ProfileNotSelected()
+	{
+		return _MainMenu_ProfileNotSelected[PlayerPrefs.GetInt ("SelectedLanguage", 0)];
+	}
 
 	public string Customization_HeaderVehicles()
 	{
