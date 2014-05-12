@@ -12,6 +12,13 @@ public class EnemySpider
 	public GameObject leg4;
 }
 
+[System.Serializable]
+public class Textures
+{
+	public Texture crvenaZvezdaTexture;
+	public Texture partizanTexture;
+}
+
 public class GameController : MonoBehaviour 
 {
 	public GameObject playerObject;
@@ -21,6 +28,8 @@ public class GameController : MonoBehaviour
 
 	public Texture crvenaZvezdaTexture;
 	public Texture partizanTexture;
+	public Textures playerTextures;
+
 
 	private int selectedComboBox;
 
@@ -30,28 +39,7 @@ public class GameController : MonoBehaviour
 		selectedComboBox = PlayerPrefs.GetInt ("SelectedOption", 0);
 		if (selectedComboBox == 0) 
 		{
-			playerObject.renderer.material.mainTexture = crvenaZvezdaTexture;
-			foreach(GameObject p in pickUps)
-			{
-				p.renderer.material.mainTexture = crvenaZvezdaTexture;
-			}
-			foreach(GameObject eb in enemiyBuzzers)
-			{
-				eb.renderer.material.mainTexture = partizanTexture;
-			}
-			foreach(EnemySpider es in enemiySpiders)
-			{
-				es.main.renderer.material.mainTexture = partizanTexture;
-				es.head.renderer.material.mainTexture = partizanTexture;
-				es.leg1.renderer.material.mainTexture = partizanTexture;
-				es.leg2.renderer.material.mainTexture = partizanTexture;
-				es.leg3.renderer.material.mainTexture = partizanTexture;
-				es.leg4.renderer.material.mainTexture = partizanTexture;
-			}
-		} 
-		else 
-		{
-			playerObject.renderer.material.mainTexture = partizanTexture;
+			playerObject.renderer.material.mainTexture = playerTextures.partizanTexture;
 			foreach(GameObject p in pickUps)
 			{
 				p.renderer.material.mainTexture = partizanTexture;
@@ -68,6 +56,27 @@ public class GameController : MonoBehaviour
 				es.leg2.renderer.material.mainTexture = crvenaZvezdaTexture;
 				es.leg3.renderer.material.mainTexture = crvenaZvezdaTexture;
 				es.leg4.renderer.material.mainTexture = crvenaZvezdaTexture;
+			}
+		} 
+		else 
+		{
+			playerObject.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
+			foreach(GameObject p in pickUps)
+			{
+				p.renderer.material.mainTexture = crvenaZvezdaTexture;
+			}
+			foreach(GameObject eb in enemiyBuzzers)
+			{
+				eb.renderer.material.mainTexture = partizanTexture;
+			}
+			foreach(EnemySpider es in enemiySpiders)
+			{
+				es.main.renderer.material.mainTexture = partizanTexture;
+				es.head.renderer.material.mainTexture = partizanTexture;
+				es.leg1.renderer.material.mainTexture = partizanTexture;
+				es.leg2.renderer.material.mainTexture = partizanTexture;
+				es.leg3.renderer.material.mainTexture = partizanTexture;
+				es.leg4.renderer.material.mainTexture = partizanTexture;
 			}
 		}
 	}
