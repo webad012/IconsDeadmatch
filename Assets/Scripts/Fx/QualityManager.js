@@ -118,7 +118,7 @@ private function AutoDetectQuality ()
 
 	#endif
 
-	Debug.Log (String.Format (
+	/*Debug.Log (String.Format (
 		"AngryBots: Quality set to '{0}'{1}",
 		currentQuality,
 		#if UNITY_IPHONE
@@ -132,7 +132,7 @@ private function AutoDetectQuality ()
 		#else
 			" (" + Application.platform + ")"
 		#endif
-	));
+	));*/
 }
 
 private function ApplyAndSetQuality (newQuality : Quality) {
@@ -200,7 +200,7 @@ private function ApplyAndSetQuality (newQuality : Quality) {
 			camera.depthTextureMode |= DepthTextureMode.Depth;
 	}
 
-	Debug.Log ("AngryBots: setting shader LOD to " + quality);
+	//Debug.Log ("AngryBots: setting shader LOD to " + quality);
 
 	Shader.globalMaximumLOD = quality;
 	for (var s : Shader in shaders.shaders) {

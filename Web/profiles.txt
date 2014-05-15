@@ -1,0 +1,6 @@
+username:|:password:|:email
+milos:|:jankovic:|:webad012@gmail.com
+dzanki:|:ejbrej:|:a@b.c
+milos1:|:jankovic:|:webad012@gmail.com
+milos11:|:jankovic1:|:asd@qwe.zxc
+milos2:|:milos:|:asd@qwe.zxc

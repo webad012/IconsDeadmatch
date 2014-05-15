@@ -1,0 +1,2 @@
+username:|:teamname:|:score
+milos:|:Partizan:|:73

@@ -1,10 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameController.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainMenuController.js">
     <Files>
-      <File FileName="Assets\Scripts\MainMenuController.js" Line="93" Column="4" />
-      <File FileName="Assets\Scripts\CreateProfileController.js" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="63" Column="64" />
+      <File FileName="Assets\Scripts\GameWonController.cs" Line="43" Column="32" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="47" Column="36" />
+      <File FileName="Assets\Scripts\ScoresController.cs" Line="161" Column="4" />
+      <File FileName="Assets\Scripts\MainMenuController.js" Line="132" Column="1" />
+      <File FileName="Assets\Scripts\GameOverController.cs" Line="23" Column="39" />
+      <File FileName="Assets\Scripts\Misc\InitLevelManager.cs" Line="22" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

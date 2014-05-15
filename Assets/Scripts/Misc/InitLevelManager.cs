@@ -5,7 +5,6 @@ public class InitLevelManager : MonoBehaviour
 {
 	public Texture2D splash;
 	
-	
 	private Texture2D background;
 	private bool loading = true;
 	
@@ -17,7 +16,7 @@ public class InitLevelManager : MonoBehaviour
 		background.Apply ();
 		
 		DontDestroyOnLoad (gameObject);
-		Application.LoadLevel (Application.loadedLevel + 1);
+		Application.LoadLevel ("IconsDeathmatch");
 	}
 	
 	

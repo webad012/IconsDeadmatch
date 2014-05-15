@@ -1,34 +1,54 @@
 ﻿#pragma strict
 
 public var statusText : GUIText;
+public var startButtonTexture : Texture;
+public var scoresButtonTexture : Texture;
+public var suggestButtonTexture : Texture;
+public var buttonStyle : GUIStyle;
 
-private var comboBox : ComboBox;
-private var list : GUIContent[];
+private var versusesComboBox : ComboBox;
+private var teamsComboBox : ComboBox;
+
+private var versusesList : GUIContent[];
+private var teamsList : GUIContent[];
 private var listStyle : GUIStyle;
-private var comboBoxRect : Rect;
+
+private var versusesComboBoxRect : Rect;
+private var teamsComboBoxRect : Rect;
 private var startButtonRect : Rect;
+private var scoresButtonRect : Rect;
+private var suggestButtonRect : Rect;
 private var loginUsernameRect : Rect;
 private var loginPasswordRect : Rect;
 private var loginoutButtonRect : Rect;
 private var createProfiletButtonRect : Rect;
 private var recoverPasswordButtonRect : Rect;
 private var selectedUsernameRect : Rect;
-private var selectedComboBox : int;
+
+private var selectedVersuses : int;
+private var oldSelectedVersuses : int = -1;
+private var selectedTeam : int;
+
 private var inputPassword : String = "";
 private var inputUsername : String = "";
+
 private var statusTextStartTime : float;
 private var statusTextTimeout : float = 5f;
+
 private var versusesListLodaded : boolean = false;
+private var versusesSelected : boolean = false;
+private var selectedPlayerTeam : String = "";
+private var selectedEnemyTeam : String = "";
 
 function Start()
 {
-	//list = new GUIContent[2];
-	//list[0] = new GUIContent("Zvezda vs Partizan");
-	//list[1] = new GUIContent("Partizan vs Zvezda");
 	LoadVersuses();
 	
-	startButtonRect = Rect(Screen.width/2 - 100, Screen.height/2 - 100, 200, 20);
-	comboBoxRect = Rect(Screen.width/2 - 100, Screen.height/2, 200, 20);
+	startButtonRect = Rect(Screen.width/2 - 100, Screen.height/2 - 200, 200, 200);
+	scoresButtonRect = Rect(Screen.width/2 - 200, Screen.height/2 - 100, 100, 100);
+	suggestButtonRect = Rect(Screen.width/2 + 100, Screen.height/2 - 100, 100, 100);
+	versusesComboBoxRect = Rect(Screen.width/2 - 200, Screen.height/2, 200, 20);
+	teamsComboBoxRect = Rect(Screen.width/2, Screen.height/2, 200, 20);
 	loginoutButtonRect = Rect(Screen.width - 100, 0, 100, 20);
 	loginPasswordRect = Rect(Screen.width - 200, 0, 100, 20);
 	loginUsernameRect = Rect(Screen.width - 300, 0, 100, 20);
@@ -81,21 +101,51 @@ function OnGUI()
 
 	if(versusesListLodaded == true)
 	{
-		selectedComboBox = comboBox.Show();
+		selectedVersuses = versusesComboBox.Show();
+		
+		if(selectedVersuses != oldSelectedVersuses)
+		{
+			oldSelectedVersuses = selectedVersuses;
+			//selectedTeam = 0;
+			
+			var split : String[] = versusesList[selectedVersuses].text.Split("-"[0]);
+			teamsList = new GUIContent[2];
+			teamsList[0] = new GUIContent(split[0].Trim());
+			teamsList[1] = new GUIContent(split[1].Trim());
+			
+			teamsComboBox = ComboBox(teamsComboBoxRect, teamsList[selectedTeam], teamsList, listStyle);
+		}
+		
+		selectedTeam = teamsComboBox.Show();
 	}
 	
-	if(GUI.Button(startButtonRect, "Start"))
+	if(GUI.Button(startButtonRect, startButtonTexture, buttonStyle))
 	{
-		if(PlayerPrefs.GetInt ("LoggedIn", 0) == 0)
+		if(PlayerPrefs.GetInt ("LoggedIn", 0) == 0 && versusesListLodaded == false)
 		{
 			statusText.text = "Need to login first";
 			statusTextStartTime = Time.time;
 		}
 		else
 		{
-			PlayerPrefs.SetInt("SelectedOption", selectedComboBox);
+			var enemyTeam : int = (selectedTeam+1)%2;
+			PlayerPrefs.SetInt("SelectedVSint", selectedVersuses);
+			PlayerPrefs.SetInt("SelectedTeamint", selectedTeam);
+			PlayerPrefs.SetString("SelectedUsername", inputUsername);
+			PlayerPrefs.SetString("SelectedTeam", teamsList[selectedTeam].text);
+			PlayerPrefs.SetString("EnemyTeam", teamsList[enemyTeam].text);
 			Application.LoadLevel("Default");
+			//Application.LoadLevel("IconsDeathmatch");
 		}
+	}
+	
+	if(GUI.Button(scoresButtonRect, scoresButtonTexture, buttonStyle))
+	{
+		Application.LoadLevel("Scores");
+	}
+	
+	if(GUI.Button(suggestButtonRect, suggestButtonTexture, buttonStyle))
+	{
 	}
 	
 	var guiTime : float = Time.time - statusTextStartTime;
@@ -121,15 +171,18 @@ function LoadVersuses()
 	else
 	{
 		var split : String[] = hs_get.text.Split("|"[0]);
-		list = new GUIContent[split.length/2];
+		versusesList = new GUIContent[split.length/2];
 		for (var i = 0; i < split.length; i+=2) 
 		{
-			list[i/2] = new GUIContent(split[i] + " - " + split[i+1]);
+			versusesList[i/2] = new GUIContent(split[i] + " - " + split[i+1]);
 		}
-	}
+		
+		selectedVersuses = PlayerPrefs.GetInt("SelectedVSint", 0);
+		selectedTeam = PlayerPrefs.GetInt("SelectedTeamint", 0);
 	
-	comboBox = ComboBox(comboBoxRect, list[PlayerPrefs.GetInt ("SelectedOption", 0)], list, listStyle);
-	versusesListLodaded = true;
+		versusesComboBox = ComboBox(versusesComboBoxRect, versusesList[selectedVersuses], versusesList, listStyle);
+		versusesListLodaded = true;
+	}
 }
 
 function PerformLogin()

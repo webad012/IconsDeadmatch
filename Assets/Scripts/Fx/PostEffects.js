@@ -25,7 +25,7 @@ class PostEffects {
 		
 	static function CheckSupport (needDepth : boolean) : boolean {		
 		if (!SystemInfo.supportsImageEffects || !SystemInfo.supportsRenderTextures) {
-			Debug.Log ("Disabling image effect as this platform doesn't support any");
+			//Debug.Log ("Disabling image effect as this platform doesn't support any");
 			return false;
 		}	
 		

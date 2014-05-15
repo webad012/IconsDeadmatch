@@ -19,31 +19,62 @@ public class Textures
 	public Texture partizanTexture;
 }
 
+[System.Serializable]
+public class DisplayTexts
+{
+	public GUIText timerTextFront;
+	public GUIText timerTextBack;
+	public GUIText pickupsTextFront;
+	public GUIText pickupsTextBack;
+}
+
 public class GameController : MonoBehaviour 
 {
 	public GameObject playerObject;
 	public GameObject[] enemiyBuzzers;
 	public EnemySpider[] enemiySpiders;
 	public GameObject[] pickUps;
+	public DisplayTexts displayTexts;
+	public int numberOfPickUps;
 
 	public Texture crvenaZvezdaTexture;
 	public Texture partizanTexture;
 	public Textures playerTextures;
 
+	private string selectedTeam;
+	private string enemyTeam;
 
-	private int selectedComboBox;
+	private int countDownSeconds = 40;
+	private float startTime;
+	private int restSeconds;
+
+	private int score = 0;
 
 	// Use this for initialization
 	void Start () 
 	{
-		selectedComboBox = PlayerPrefs.GetInt ("SelectedOption", 0);
-		if (selectedComboBox == 0) 
+		selectedTeam = PlayerPrefs.GetString ("SelectedTeam");
+		enemyTeam = PlayerPrefs.GetString ("EnemyTeam");
+
+		if (selectedTeam == "CrvenaZvezda") 
+		{
+			playerObject.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
+			foreach(GameObject p in pickUps)
+			{
+				p.renderer.material.mainTexture = crvenaZvezdaTexture;
+			}
+		}
+		else if(selectedTeam == "Partizan")
 		{
 			playerObject.renderer.material.mainTexture = playerTextures.partizanTexture;
 			foreach(GameObject p in pickUps)
 			{
 				p.renderer.material.mainTexture = partizanTexture;
 			}
+		}
+
+		if (enemyTeam == "CrvenaZvezda") 
+		{
 			foreach(GameObject eb in enemiyBuzzers)
 			{
 				eb.renderer.material.mainTexture = crvenaZvezdaTexture;
@@ -57,14 +88,9 @@ public class GameController : MonoBehaviour
 				es.leg3.renderer.material.mainTexture = crvenaZvezdaTexture;
 				es.leg4.renderer.material.mainTexture = crvenaZvezdaTexture;
 			}
-		} 
-		else 
+		}
+		else if(enemyTeam == "Partizan")
 		{
-			playerObject.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
-			foreach(GameObject p in pickUps)
-			{
-				p.renderer.material.mainTexture = crvenaZvezdaTexture;
-			}
 			foreach(GameObject eb in enemiyBuzzers)
 			{
 				eb.renderer.material.mainTexture = partizanTexture;
@@ -79,10 +105,40 @@ public class GameController : MonoBehaviour
 				es.leg4.renderer.material.mainTexture = partizanTexture;
 			}
 		}
+
+		startTime = Time.time;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		restSeconds = Mathf.CeilToInt (countDownSeconds - (Time.time - startTime));
+
+		if (numberOfPickUps == 0) 
+		{
+			score += restSeconds;
+			PlayerPrefs.SetString("PlayerScore", score.ToString());
+			Application.LoadLevel("GameWon");
+		}
+
+		if (restSeconds == 0) 
+		{
+			Application.LoadLevel("GameLost");
+		}
+	}
+
+	void OnGUI()
+	{
+		displayTexts.pickupsTextFront.text = "Left: " + numberOfPickUps;
+		displayTexts.pickupsTextBack.text = "Left: " + numberOfPickUps;
+
+		displayTexts.timerTextFront.text = "Time: " + restSeconds.ToString();
+		displayTexts.timerTextBack.text = displayTexts.timerTextFront.text;
+	}
+
+	public void PickedUp()
+	{
+		numberOfPickUps--;
+		score += 10;
 	}
 }
