@@ -20,8 +20,15 @@ class MyTXT {
 			else {
 				$this->rows = ".";
 				if ($fh = fopen($filepath, 'w')) {
-					fwrite($fh, ".");
-					fclose($fh);
+					if (flock($fh, LOCK_EX)) {
+						fwrite($fh, ".");
+						fclose($fh);
+						flock($fh, LOCK_UN);
+					}
+					else
+					{
+						die("could not obtain lock");
+					}
 				}
 				else {
 					echo("Text database not found. Could not create new file.");
@@ -38,30 +45,37 @@ class MyTXT {
 
 		$this->file = $readfile;
 		$fh = fopen($readfile, 'r');
-		clearstatcache();
-		$textdata = fread($fh, filesize($readfile));
-		fclose($fh);
-		$textdata = str_replace("\r", "\n", $textdata);
-		$textdata = str_replace("\n\n", "\n", $textdata);
-		$rowdata = array();
-		$textdata = explode("\n", $textdata);
-		$textdata = array_reverse($textdata);
-		$indices = explode($this->delimiter, array_pop($textdata));
-		$textdata = array_reverse($textdata);
-		$count = 0;
-		foreach ($textdata as $value) {
-			if ($value != "") {
-				$rowdata[$count] = explode($this->delimiter, $value);
-				foreach ($rowdata[$count] as $oldkey=>$propertyvalue) {
-					$rowdata[$count][$indices[$oldkey]] = $propertyvalue;
-					unset($rowdata[$count][$oldkey]);
+		if (flock($fh, LOCK_EX)) {
+			clearstatcache();
+			$textdata = fread($fh, filesize($readfile));
+			flock($fh, LOCK_UN);
+			fclose($fh);
+			$textdata = str_replace("\r", "\n", $textdata);
+			$textdata = str_replace("\n\n", "\n", $textdata);
+			$rowdata = array();
+			$textdata = explode("\n", $textdata);
+			$textdata = array_reverse($textdata);
+			$indices = explode($this->delimiter, array_pop($textdata));
+			$textdata = array_reverse($textdata);
+			$count = 0;
+			foreach ($textdata as $value) {
+				if ($value != "") {
+					$rowdata[$count] = explode($this->delimiter, $value);
+					foreach ($rowdata[$count] as $oldkey=>$propertyvalue) {
+						$rowdata[$count][$indices[$oldkey]] = $propertyvalue;
+						unset($rowdata[$count][$oldkey]);
+					}
+					$count += 1;
 				}
-				$count += 1;
 			}
+			// will load memory with contents of text file table
+			$this->rows = $rowdata;
+			return True;
 		}
-		// will load memory with contents of text file table
-		$this->rows = $rowdata;
-		return True;
+		else
+		{
+			die("could not obtain lock");
+		}
 	}
 	function save($savefile="__default__") {
 		// will save a 2-dimensional array of data to a text file
@@ -87,10 +101,17 @@ class MyTXT {
 		if (!$fh = fopen($savefile, 'w')) {
 			return False;
 		}
-		$textdata = fwrite($fh, $output);
-		fclose($fh);
-		clearstatcache();
-		return True;
+		if (flock($fh, LOCK_EX)) {
+			$textdata = fwrite($fh, $output);
+			flock($fh, LOCK_UN);
+			fclose($fh);
+			clearstatcache();
+			return True;
+		}
+		else
+		{
+			die("could not obtain lock");
+		}
 	}
 	function columns() {
 		// will return array of column names for table

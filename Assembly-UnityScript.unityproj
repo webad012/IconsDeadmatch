@@ -73,7 +73,6 @@
      <Compile Include="Assets\Scripts\Animation\SpiderAnimation.js" />
      <Compile Include="Assets\Scripts\Animation\SpiderAnimationTest.js" />
      <Compile Include="Assets\Scripts\Animation\conveyorBelt.js" />
-     <Compile Include="Assets\Scripts\CreateProfileController.js" />
      <Compile Include="Assets\Scripts\Fx\BrokenScreen.js" />
      <Compile Include="Assets\Scripts\Fx\ColoredNoise.js" />
      <Compile Include="Assets\Scripts\Fx\DeactivatorOnLowQuality.js" />
@@ -92,7 +91,6 @@
      <Compile Include="Assets\Scripts\Fx\SelfIlluminationBlink.js" />
      <Compile Include="Assets\Scripts\Fx\ShaderDatabase.js" />
      <Compile Include="Assets\Scripts\Fx\WorldSpaceSpecular.js" />
-     <Compile Include="Assets\Scripts\MainMenuController.js" />
      <Compile Include="Assets\Scripts\Managers\MaterialImpactManager.js" />
      <Compile Include="Assets\Scripts\Managers\Spawner.js" />
      <Compile Include="Assets\Scripts\Managers\TextAdventureManager.js" />

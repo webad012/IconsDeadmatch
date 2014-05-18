@@ -37,14 +37,17 @@ public class GameController : MonoBehaviour
 	public DisplayTexts displayTexts;
 	public int numberOfPickUps;
 
-	public Texture crvenaZvezdaTexture;
-	public Texture partizanTexture;
+	//public Texture crvenaZvezdaTexture;
+	//public Texture partizanTexture;
 	public Textures playerTextures;
+	public Textures pickUpsTextures;
+	public Textures buzzersTextures;
+	public Textures spidersTextures;
 
 	private string selectedTeam;
 	private string enemyTeam;
 
-	private int countDownSeconds = 40;
+	private int countDownSeconds = 30;
 	private float startTime;
 	private int restSeconds;
 
@@ -61,7 +64,7 @@ public class GameController : MonoBehaviour
 			playerObject.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
 			foreach(GameObject p in pickUps)
 			{
-				p.renderer.material.mainTexture = crvenaZvezdaTexture;
+				p.renderer.material.mainTexture = pickUpsTextures.crvenaZvezdaTexture;
 			}
 		}
 		else if(selectedTeam == "Partizan")
@@ -69,7 +72,7 @@ public class GameController : MonoBehaviour
 			playerObject.renderer.material.mainTexture = playerTextures.partizanTexture;
 			foreach(GameObject p in pickUps)
 			{
-				p.renderer.material.mainTexture = partizanTexture;
+				p.renderer.material.mainTexture = pickUpsTextures.partizanTexture;
 			}
 		}
 
@@ -77,32 +80,32 @@ public class GameController : MonoBehaviour
 		{
 			foreach(GameObject eb in enemiyBuzzers)
 			{
-				eb.renderer.material.mainTexture = crvenaZvezdaTexture;
+				eb.renderer.material.mainTexture = buzzersTextures.crvenaZvezdaTexture;
 			}
 			foreach(EnemySpider es in enemiySpiders)
 			{
-				es.main.renderer.material.mainTexture = crvenaZvezdaTexture;
-				es.head.renderer.material.mainTexture = crvenaZvezdaTexture;
-				es.leg1.renderer.material.mainTexture = crvenaZvezdaTexture;
-				es.leg2.renderer.material.mainTexture = crvenaZvezdaTexture;
-				es.leg3.renderer.material.mainTexture = crvenaZvezdaTexture;
-				es.leg4.renderer.material.mainTexture = crvenaZvezdaTexture;
+				es.main.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
+				es.head.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
+				es.leg1.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
+				es.leg2.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
+				es.leg3.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
+				es.leg4.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
 			}
 		}
 		else if(enemyTeam == "Partizan")
 		{
 			foreach(GameObject eb in enemiyBuzzers)
 			{
-				eb.renderer.material.mainTexture = partizanTexture;
+				eb.renderer.material.mainTexture = buzzersTextures.partizanTexture;
 			}
 			foreach(EnemySpider es in enemiySpiders)
 			{
-				es.main.renderer.material.mainTexture = partizanTexture;
-				es.head.renderer.material.mainTexture = partizanTexture;
-				es.leg1.renderer.material.mainTexture = partizanTexture;
-				es.leg2.renderer.material.mainTexture = partizanTexture;
-				es.leg3.renderer.material.mainTexture = partizanTexture;
-				es.leg4.renderer.material.mainTexture = partizanTexture;
+				es.main.renderer.material.mainTexture = spidersTextures.partizanTexture;
+				es.head.renderer.material.mainTexture = spidersTextures.partizanTexture;
+				es.leg1.renderer.material.mainTexture = spidersTextures.partizanTexture;
+				es.leg2.renderer.material.mainTexture = spidersTextures.partizanTexture;
+				es.leg3.renderer.material.mainTexture = spidersTextures.partizanTexture;
+				es.leg4.renderer.material.mainTexture = spidersTextures.partizanTexture;
 			}
 		}
 

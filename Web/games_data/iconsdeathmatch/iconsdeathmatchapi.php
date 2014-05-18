@@ -144,7 +144,7 @@ else if($action == 'RecoverPassword')
 		}
 		else
 		{
-			echo "ERROR";
+			echo "user not found";
 		}
 		
 		$mytxt->close();
@@ -232,6 +232,52 @@ else if($action == 'GetTeamScores')
 			$result .= $key."|".$value;
 		}
 		echo $result;
+	}
+}
+else if($action == 'GetCurrentVersion')
+{
+	$mytxt = new MyTXT("currentversion.txt");
+	
+	$result = $mytxt->rows[0]["current_version"];
+	
+	$mytxt->close();
+	
+	echo $result;
+}
+else if($action == 'SuggestVS')
+{
+	$team1 = $_REQUEST['Team1'];
+	$team2 = $_REQUEST['Team2'];
+	$comment = $_REQUEST['Comment'];
+	
+	if(!isset($team1) || !isset($team2) || !isset($comment))
+	{
+		echo 'bad action';
+	}
+	else
+	{	
+		$mytxt = new MyTXT("suggestedvss.txt");
+	
+		$exists = false;
+		foreach ($mytxt->rows as $row) 
+		{
+			if(($row['team1name'] == $team1 && $row['team2name'] == $team2)
+				|| ($row['team1name'] == $team2 && $row['team2name'] == $team1))
+			{
+				$exists = true;
+				break;
+			}
+		}
+		
+		if(!$exists)
+		{
+			$mytxt->add_row(array($team1, $team2, $comment));
+			$mytxt->save("suggestedvss.txt");
+		}
+		
+		$mytxt->close();
+		
+		echo "OK";
 	}
 }
 else

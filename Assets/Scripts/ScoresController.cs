@@ -107,7 +107,7 @@ public class ScoresController : MonoBehaviour
 	IEnumerator LoadTeams()
 	{
 		statusText.text = "Loading teams";
-		WWW teamsLoad = new WWW("http://alas.matf.bg.ac.rs/~mi08204/projekti/IconsDeathmatch/iconsdeathmatchapi.php?action=GetVersuses");
+		WWW teamsLoad = new WWW(StaticTexts.Instance.web_api_location + "?action=GetVersuses");
 		yield return teamsLoad;
 
 		if (teamsLoad.error != null)
@@ -150,7 +150,7 @@ public class ScoresController : MonoBehaviour
 	IEnumerator LoadScores()
 	{
 		statusText.text = "Loading scores";
-		WWW scoresLoad = new WWW("http://alas.matf.bg.ac.rs/~mi08204/projekti/IconsDeathmatch/iconsdeathmatchapi.php?action=GetTeamScores&Team="+teamsList[selectedTeam].text);
+		WWW scoresLoad = new WWW(StaticTexts.Instance.web_api_location + "?action=GetTeamScores&Team="+teamsList[selectedTeam].text);
 		yield return scoresLoad;
 
 		if (scoresLoad.error != null) 

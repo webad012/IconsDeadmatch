@@ -19,9 +19,8 @@ public class StartUpController : MonoBehaviour
 	IEnumerator CheckGameVersion () 
 	{
 		statusText.guiText.text = "Checking version";
-		//statusTextStartTime = Time.time;
-		
-		WWW hs_get = new WWW("http://alas.matf.bg.ac.rs/~mi08204/projekti/IconsDeathmatch/currentversion.txt");
+
+		WWW hs_get = new WWW(StaticTexts.Instance.web_api_location + "?action=GetCurrentVersion");
 		yield return hs_get;
 		
 		if (hs_get.error != null)
@@ -31,18 +30,21 @@ public class StartUpController : MonoBehaviour
 		else
 		{
 			statusText.guiText.text = hs_get.text;
+			if(!hs_get.text.Contains("bad action"))
+			{
+				statusText.guiText.text = hs_get.text;
 
-			float serverVersion;
-			float.TryParse(hs_get.text, out serverVersion);
-			if(currentVersion != serverVersion)
-			{
-				statusText.guiText.text = "Version obsolete, please download latest version";
+				float serverVersion;
+				float.TryParse(hs_get.text, out serverVersion);
+				if(currentVersion != serverVersion)
+				{
+					statusText.guiText.text = "Version obsolete, please download latest version";
+				}
+				else
+				{
+					Application.LoadLevel("MainMenu");
+				}
 			}
-			else
-			{
-				Application.LoadLevel("MainMenu");
-			}
-			//gameObject.guiText.text = hs_get.text; // this is a GUIText that will display the scores in game.
 		}
 	}
 }

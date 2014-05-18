@@ -36,8 +36,8 @@ public class GameWonController : MonoBehaviour
 	IEnumerator SendScore()
 	{
 		statusText = "Sending score to server, please wait";
-		string url = "http://alas.matf.bg.ac.rs/~mi08204/projekti/IconsDeathmatch/"
-						+ "iconsdeathmatchapi.php?action=SendScore&Username=" + PlayerPrefs.GetString("SelectedProfileUsername") 
+		string url = StaticTexts.Instance.web_api_location
+						+ "?action=SendScore&Username=" + PlayerPrefs.GetString("SelectedProfileUsername") 
 						+ "&Team=" + PlayerPrefs.GetString ("SelectedTeam") + "&Score=" + PlayerPrefs.GetString ("PlayerScore");
 		//Debug.Log (url);
 		WWW scoreSend = new WWW(url);
