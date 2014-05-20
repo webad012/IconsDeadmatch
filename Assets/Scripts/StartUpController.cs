@@ -5,7 +5,7 @@ public class StartUpController : MonoBehaviour
 {
 	public GUIText statusText;
 
-	private float currentVersion = 0.1f;
+	private float currentVersion = 0.4f;
 
 	// Use this for initialization
 	void Start () 

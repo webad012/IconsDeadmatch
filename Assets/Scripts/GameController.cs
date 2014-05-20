@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class EnemySpider
@@ -28,14 +29,25 @@ public class DisplayTexts
 	public GUIText pickupsTextBack;
 }
 
+[System.Serializable]
+public class Boundary
+{
+	public float xMin;
+	public float xMax;
+	public float zMin;
+	public float zMax;
+}
+
 public class GameController : MonoBehaviour 
 {
 	public GameObject playerObject;
 	public GameObject[] enemiyBuzzers;
 	public EnemySpider[] enemiySpiders;
-	public GameObject[] pickUps;
+	//public GameObject[] pickUps;
+	public List<GameObject> pickUps;
 	public DisplayTexts displayTexts;
-	public int numberOfPickUps;
+	public List<Boundary> pickUpsSpawnPints;
+	//public int numberOfPickUps;
 
 	//public Texture crvenaZvezdaTexture;
 	//public Texture partizanTexture;
@@ -47,7 +59,7 @@ public class GameController : MonoBehaviour
 	private string selectedTeam;
 	private string enemyTeam;
 
-	private int countDownSeconds = 30;
+	private int countDownSeconds = 60;
 	private float startTime;
 	private int restSeconds;
 
@@ -117,7 +129,7 @@ public class GameController : MonoBehaviour
 	{
 		restSeconds = Mathf.CeilToInt (countDownSeconds - (Time.time - startTime));
 
-		if (numberOfPickUps == 0) 
+		if (pickUps.Count == 0) 
 		{
 			score += restSeconds;
 			PlayerPrefs.SetString("PlayerScore", score.ToString());
@@ -132,16 +144,17 @@ public class GameController : MonoBehaviour
 
 	void OnGUI()
 	{
-		displayTexts.pickupsTextFront.text = "Left: " + numberOfPickUps;
-		displayTexts.pickupsTextBack.text = "Left: " + numberOfPickUps;
+		displayTexts.pickupsTextFront.text = "Left: " + pickUps.Count;
+		displayTexts.pickupsTextBack.text = "Left: " + pickUps.Count;
 
 		displayTexts.timerTextFront.text = "Time: " + restSeconds.ToString();
 		displayTexts.timerTextBack.text = displayTexts.timerTextFront.text;
 	}
 
-	public void PickedUp()
+	public void PickedUp(GameObject pickUp)
 	{
-		numberOfPickUps--;
+		//numberOfPickUps--;
+		pickUps.Remove (pickUp);
 		score += 10;
 	}
 }

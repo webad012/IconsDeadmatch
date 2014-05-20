@@ -34,7 +34,7 @@ public class PickUpController : MonoBehaviour
 		if(other.gameObject.tag == "Player")
 		{
 			GameObject gameController = GameObject.FindWithTag("GameController");
-			gameController.GetComponent<GameController>().PickedUp();
+			gameController.GetComponent<GameController>().PickedUp(this.gameObject);
 			Destroy(gameObject);
 		}
 	}
