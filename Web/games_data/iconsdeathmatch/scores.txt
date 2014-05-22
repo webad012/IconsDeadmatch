@@ -1,2 +1,12 @@
 username:|:teamname:|:score
 milos:|:Partizan:|:73
+milos:|:CrvenaZvezda:|:69
+milos:|:CrvenaZvezda:|:61
+milos:|:Partizan:|:63
+milos:|:CrvenaZvezda:|:62
+milos:|:Partizan:|:60
+milos:|:Partizan:|:60
+milos:|:Partizan:|:91
+milos:|:Partizan:|:64
+milos:|:CrvenaZvezda:|:43
+milos:|:CrvenaZvezda:|:36

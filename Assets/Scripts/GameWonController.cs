@@ -11,7 +11,15 @@ public class GameWonController : MonoBehaviour
 	{
 		Screen.showCursor = true;
 		statusText = "";
-		StartCoroutine (SendScore());
+		if (PlayerPrefs.GetInt ("LoggedIn", 0) == 0) 
+		{
+			canExit = true;
+			statusText = "ESC to main menu";
+		} 
+		else 
+		{
+			StartCoroutine (SendScore ());
+		}
 	}
 	
 	// Update is called once per frame

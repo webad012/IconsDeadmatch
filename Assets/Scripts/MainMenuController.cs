@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 
 public class MainMenuController : MonoBehaviour 
@@ -131,8 +132,17 @@ public class MainMenuController : MonoBehaviour
 		{
 			if(PlayerPrefs.GetInt ("LoggedIn", 0) == 0 || versusesListLodaded == false)
 			{
-				statusText.text = "Need to login first";
-				statusTextStartTime = Time.time;
+				if (EditorUtility.DisplayDialog ("Confirmation dialog",
+				                                 "You can play without logging in but score will not be saved.\nAre you sure?",
+				                                 "Yes",
+				                                 "No")) 
+				{
+					int enemyTeam = (selectedTeam+1)%2;
+					PlayerPrefs.SetInt("SelectedTeamint", selectedTeam);
+					PlayerPrefs.SetString("SelectedTeam", teamsList[selectedTeam].text);
+					PlayerPrefs.SetString("EnemyTeam", teamsList[enemyTeam].text);
+					Application.LoadLevel("LevelSelector");
+				}
 			}
 			else
 			{
@@ -141,7 +151,7 @@ public class MainMenuController : MonoBehaviour
 				PlayerPrefs.SetString("SelectedUsername", inputUsername);
 				PlayerPrefs.SetString("SelectedTeam", teamsList[selectedTeam].text);
 				PlayerPrefs.SetString("EnemyTeam", teamsList[enemyTeam].text);
-				Application.LoadLevel("Default");
+				Application.LoadLevel("LevelSelector");
 			}
 		}
 		

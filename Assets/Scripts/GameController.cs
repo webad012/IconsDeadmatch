@@ -18,6 +18,8 @@ public class Textures
 {
 	public Texture crvenaZvezdaTexture;
 	public Texture partizanTexture;
+	public Texture androidTexture;
+	public Texture appleTexture;
 }
 
 [System.Serializable]
@@ -34,32 +36,41 @@ public class Boundary
 {
 	public float xMin;
 	public float xMax;
+	public float yPos;
 	public float zMin;
 	public float zMax;
 }
 
-public class GameController : MonoBehaviour 
+[System.Serializable]
+public class Level
 {
-	public GameObject playerObject;
+	public Vector3 playerStartPosition;
 	public GameObject[] enemiyBuzzers;
 	public EnemySpider[] enemiySpiders;
-	//public GameObject[] pickUps;
-	public List<GameObject> pickUps;
-	public DisplayTexts displayTexts;
 	public List<Boundary> pickUpsSpawnPints;
-	//public int numberOfPickUps;
+	public int countDownSeconds;
+	public int numberOfPickUps;
+}
 
-	//public Texture crvenaZvezdaTexture;
-	//public Texture partizanTexture;
+public class GameController : MonoBehaviour 
+{
+	public GameObject playerObjectForPositioning;
+	public GameObject playerObjectForTexture;
+	public GameObject pickUpObject;
+	public DisplayTexts displayTexts;
+
+	public List<Level> levels;
+
 	public Textures playerTextures;
 	public Textures pickUpsTextures;
 	public Textures buzzersTextures;
 	public Textures spidersTextures;
 
+	private List<GameObject> pickUps = new List<GameObject>();
+
 	private string selectedTeam;
 	private string enemyTeam;
 
-	private int countDownSeconds = 60;
 	private float startTime;
 	private int restSeconds;
 
@@ -68,12 +79,16 @@ public class GameController : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		playerObjectForPositioning.transform.position = levels [PlayerPrefs.GetInt ("SelectedLevel", 0)].playerStartPosition;
+
+		InitializePickUps ();
+
 		selectedTeam = PlayerPrefs.GetString ("SelectedTeam");
 		enemyTeam = PlayerPrefs.GetString ("EnemyTeam");
 
 		if (selectedTeam == "CrvenaZvezda") 
 		{
-			playerObject.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
+			playerObjectForTexture.renderer.material.mainTexture = playerTextures.crvenaZvezdaTexture;
 			foreach(GameObject p in pickUps)
 			{
 				p.renderer.material.mainTexture = pickUpsTextures.crvenaZvezdaTexture;
@@ -81,20 +96,28 @@ public class GameController : MonoBehaviour
 		}
 		else if(selectedTeam == "Partizan")
 		{
-			playerObject.renderer.material.mainTexture = playerTextures.partizanTexture;
+			playerObjectForTexture.renderer.material.mainTexture = playerTextures.partizanTexture;
 			foreach(GameObject p in pickUps)
 			{
 				p.renderer.material.mainTexture = pickUpsTextures.partizanTexture;
 			}
 		}
+		else if(selectedTeam == "Android")
+		{
+			playerObjectForTexture.renderer.material.mainTexture = playerTextures.androidTexture;
+			foreach(GameObject p in pickUps)
+			{
+				p.renderer.material.mainTexture = pickUpsTextures.androidTexture;
+			}
+		}
 
 		if (enemyTeam == "CrvenaZvezda") 
 		{
-			foreach(GameObject eb in enemiyBuzzers)
+			foreach(GameObject eb in levels[PlayerPrefs.GetInt("SelectedLevel", 0)].enemiyBuzzers)
 			{
 				eb.renderer.material.mainTexture = buzzersTextures.crvenaZvezdaTexture;
 			}
-			foreach(EnemySpider es in enemiySpiders)
+			foreach(EnemySpider es in levels[PlayerPrefs.GetInt("SelectedLevel", 0)].enemiySpiders)
 			{
 				es.main.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
 				es.head.renderer.material.mainTexture = spidersTextures.crvenaZvezdaTexture;
@@ -106,11 +129,11 @@ public class GameController : MonoBehaviour
 		}
 		else if(enemyTeam == "Partizan")
 		{
-			foreach(GameObject eb in enemiyBuzzers)
+			foreach(GameObject eb in levels[PlayerPrefs.GetInt("SelectedLevel", 0)].enemiyBuzzers)
 			{
 				eb.renderer.material.mainTexture = buzzersTextures.partizanTexture;
 			}
-			foreach(EnemySpider es in enemiySpiders)
+			foreach(EnemySpider es in levels[PlayerPrefs.GetInt("SelectedLevel", 0)].enemiySpiders)
 			{
 				es.main.renderer.material.mainTexture = spidersTextures.partizanTexture;
 				es.head.renderer.material.mainTexture = spidersTextures.partizanTexture;
@@ -127,7 +150,7 @@ public class GameController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		restSeconds = Mathf.CeilToInt (countDownSeconds - (Time.time - startTime));
+		restSeconds = Mathf.CeilToInt (levels[PlayerPrefs.GetInt("SelectedLevel", 0)].countDownSeconds - (Time.time - startTime));
 
 		if (pickUps.Count == 0) 
 		{
@@ -149,6 +172,31 @@ public class GameController : MonoBehaviour
 
 		displayTexts.timerTextFront.text = "Time: " + restSeconds.ToString();
 		displayTexts.timerTextBack.text = displayTexts.timerTextFront.text;
+	}
+
+	void InitializePickUps()
+	{
+		List<int> taken_spawn_points = new List<int> ();
+
+		for (int i=0; i<levels[PlayerPrefs.GetInt("SelectedLevel", 0)].numberOfPickUps; i++) 
+		{
+			bool spawned = false;
+			do
+			{
+				int rnd = Random.Range(0, levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints.Count);
+				if(!taken_spawn_points.Contains(rnd))
+				{
+					spawned = true;
+					taken_spawn_points.Add(rnd);
+					Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints[rnd].xMin, levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints[rnd].xMax),
+					                                    levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints[rnd].yPos,
+					                                    UnityEngine.Random.Range(levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints[rnd].zMin, levels[PlayerPrefs.GetInt("SelectedLevel", 0)].pickUpsSpawnPints[rnd].zMax));
+
+					pickUps.Add( (GameObject)Instantiate(pickUpObject, spawnPosition, Quaternion.identity) );
+				}
+			}
+			while(!spawned);
+		}
 	}
 
 	public void PickedUp(GameObject pickUp)

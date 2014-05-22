@@ -2,3 +2,4 @@ team1name:|:team2name:|:comment
 CrvenaZvezda:|:Partizan:|:nista
 Marvel:|:DC:|:opet
 Android:|:Iphone:|:
+Konj:|:Prase:|:

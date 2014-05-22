@@ -1,2 +1,3 @@
 username:|:password:|:email
 milos:|:jankovic:|:webad012@gmail.com
+testuser:|:asd:|:asd@qwe.zxc
